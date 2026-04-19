@@ -29,7 +29,7 @@ public class ClienteController {
             @RequestParam("file") MultipartFile file) {
 
         try {
-            // 🔍 validações básicas
+            // ✅ validações
             if (cpf == null || cpf.isEmpty()) {
                 return ResponseEntity.badRequest().body("CPF obrigatório");
             }
@@ -38,7 +38,7 @@ public class ClienteController {
                 return ResponseEntity.badRequest().body("Arquivo obrigatório");
             }
 
-            // 🔎 busca cliente
+            // 🔎 busca ou cria cliente
             Cliente cliente = clienteRepo.findByCpf(cpf);
 
             if (cliente == null) {
@@ -47,21 +47,24 @@ public class ClienteController {
                 clienteRepo.save(cliente);
             }
 
-            // 📁 cria pasta
-            String pasta = "uploads/" + cpf;
+            // 📁 caminho seguro no Railway (/tmp)
+            String pasta = System.getProperty("java.io.tmpdir") + "/uploads/" + cpf;
+
             File dir = new File(pasta);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
 
-            // 💾 salva arquivo
-            String caminho = pasta + "/" + file.getOriginalFilename();
+            // 💾 salvar arquivo
+            String nomeArquivo = file.getOriginalFilename();
+            String caminho = pasta + "/" + nomeArquivo;
+
             File destino = new File(caminho);
             file.transferTo(destino);
 
-            // 🗄️ salva no banco
+            // 🗄️ salvar no banco
             Documento doc = new Documento();
-            doc.setNomeArquivo(file.getOriginalFilename());
+            doc.setNomeArquivo(nomeArquivo);
             doc.setCaminho(caminho);
             doc.setCliente(cliente);
 
@@ -78,4 +81,3 @@ public class ClienteController {
         }
     }
 }
-
