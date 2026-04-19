@@ -15,5 +15,14 @@ public class Documento {
     @ManyToOne
     private Cliente cliente;
 
-    // getters e setters
+    public Long getId() { return id; }
+
+    public String getNomeArquivo() { return nomeArquivo; }
+    public void setNomeArquivo(String nomeArquivo) { this.nomeArquivo = nomeArquivo; }
+
+    public String getCaminho() { return caminho; }
+    public void setCaminho(String caminho) { this.caminho = caminho; }
+
+    public Cliente getCliente() { return cliente; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; }
 }
