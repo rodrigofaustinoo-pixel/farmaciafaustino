@@ -19,12 +19,10 @@ public class ClienteController {
     @Autowired
     private DocumentoRepository docRepo;
 
-    @PostMapping("/upload")
-    public String upload(
-            @RequestParam String cpf,
-            @RequestParam MultipartFile file) throws IOException {
-
-        Cliente cliente = clienteRepo.findByCpf(cpf);
+   @PostMapping(value = "/upload", consumes = "multipart/form-data")
+public String upload(
+        @RequestParam("cpf") String cpf,
+        @RequestParam("file") MultipartFile file) throws IOException {
 
         if (cliente == null) {
             cliente = new Cliente();
